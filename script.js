@@ -3,6 +3,7 @@ const cardValues8 = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"
 const cardValues12 = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F", "G", "H", "I"];
 var cardValues = cardValues8;
 var totalPairs = 8;
+var cardsBlocked = true;
 let cards = [];
 
 const harderButton = document.getElementById("harder-button");
@@ -53,6 +54,7 @@ const shuffleArray = (array) => {
 };
 
 const createCardElements = () => {
+    cardsBlocked = false;
     const gameContainer = document.querySelector(".game-container");
 
     cards = generateCardPairs();
@@ -145,7 +147,6 @@ logButton.addEventListener("click", () => {
 });
 function resetGame(){
     const gameContainer = document.querySelector(".game-container");
-
     // Remove all current cards
     while (gameContainer.firstChild) {
         gameContainer.removeChild(gameContainer.firstChild);
@@ -201,7 +202,6 @@ const handleCardClick = (event) => {
     play('flip');
     if (!firstCard) {
         firstCard = cardElement;
-        play('flip2');
         cardElement.classList.add("opened");
     } else if (!secondCard && cardElement !== firstCard) {
         secondCard = cardElement;
@@ -227,8 +227,9 @@ const handleCardClick = (event) => {
             }
         } else {
             canClick = false;
+            cardsBlocked = true;
             setTimeout(() => {
-                if (firstCard !== null && firstCard.classList.contains("opened")) {
+                if (cardsBlocked){
                     firstCard.classList.remove("opened");
                     secondCard.classList.remove("opened");
                     firstCard = null;
