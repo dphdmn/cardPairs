@@ -1,6 +1,34 @@
-const cardValues = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"];
-const totalPairs = 8;
+document.body.style.overflow = "hidden";
+const cardValues8 = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"];
+const cardValues12 = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F", "G", "H", "I"];
+var cardValues = cardValues8;
+var totalPairs = 8;
 let cards = [];
+
+const harderButton = document.getElementById("harder-button");
+
+harderButton.addEventListener("click", () => {
+    if (totalPairs === 8){
+        cardValues = cardValues12;
+        totalPairs = 12;
+        resetGame();
+        logResult("mode12");
+        const gameContainer = document.querySelector(".game-container");
+        gameContainer.style.gridTemplateColumns = 'repeat(6, 1fr)';
+        createCardElements();
+        harderButton.innerHTML = "Easier";
+    } else{
+        cardValues = cardValues8;
+        totalPairs = 8;
+        resetGame();
+        logResult("mode8");
+        const gameContainer = document.querySelector(".game-container");
+        gameContainer.style.gridTemplateColumns = 'repeat(4, 1fr)';
+        createCardElements();
+        harderButton.innerHTML = "Harder";
+    }
+});
+
 var eng = Random.MersenneTwister19937.autoSeed();
 var myrandom = new Random.Random(eng);
 const generateCardPairs = () => {
@@ -61,6 +89,7 @@ let timerInterval;
 
 const timerElement = document.getElementById("timer");
 const newGameButton = document.getElementById("new-game-button");
+
 const logButton = document.getElementById("copy-log");
 const startTimer = () => {
     startTime = new Date().getTime();
@@ -114,15 +143,7 @@ function copyArrayToClipboard(results) {
 logButton.addEventListener("click", () => {
     copyArrayToClipboard(results);
 });
-
-newGameButton.addEventListener("click", () => {
-    if (!(document.querySelectorAll(".card.opened").length === totalPairs * 2)) {
-        if (results.length > 0) {
-            if (results[results.length - 1] !== "reset") {
-                logResult("reset");
-            }
-        }
-    }
+function resetGame(){
     const gameContainer = document.querySelector(".game-container");
 
     // Remove all current cards
@@ -136,7 +157,18 @@ newGameButton.addEventListener("click", () => {
     firstCard = null;
     secondCard = null;
     canClick = false;
+}
 
+
+newGameButton.addEventListener("click", () => {
+    if (!(document.querySelectorAll(".card.opened").length === totalPairs * 2)) {
+        if (results.length > 0) {
+            if (results[results.length - 1] !== "reset") {
+                logResult("reset");
+            }
+        }
+    }
+    resetGame();
     // Create new card elements
     createCardElements();
 
@@ -196,11 +228,13 @@ const handleCardClick = (event) => {
         } else {
             canClick = false;
             setTimeout(() => {
-                firstCard.classList.remove("opened");
-                secondCard.classList.remove("opened");
-                firstCard = null;
-                secondCard = null;
-                canClick = true;
+                if (firstCard !== null && firstCard.classList.contains("opened")) {
+                    firstCard.classList.remove("opened");
+                    secondCard.classList.remove("opened");
+                    firstCard = null;
+                    secondCard = null;
+                    canClick = true;
+                }
             }, 600);
         }
     }
@@ -231,3 +265,4 @@ function play(soundName) {
         audio.play();
     }
 }
+logResult("mode8");
