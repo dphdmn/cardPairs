@@ -4,6 +4,7 @@ const cardValues12 = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C"
 var cardValues = cardValues8;
 var totalPairs = 8;
 var cardsBlocked = true;
+var expectedUnlock = 0;
 let cards = [];
 
 const harderButton = document.getElementById("harder-button");
@@ -55,6 +56,7 @@ const shuffleArray = (array) => {
 
 const createCardElements = () => {
     cardsBlocked = false;
+    expectedUnlock = 0;
     const gameContainer = document.querySelector(".game-container");
 
     cards = generateCardPairs();
@@ -104,12 +106,12 @@ const stopTimer = () => {
 
 const updateTimer = () => {
     const currentTime = new Date().getTime();
-    const elapsedTime = (currentTime - startTime) / 10; // Calculate elapsed time in centiseconds
+    const elapsedTime = (currentTime - startTime)/1000; 
 
-    const seconds = Math.floor(elapsedTime / 100); // Extract seconds
-    const centiseconds = Math.floor(elapsedTime % 100); // Extract centiseconds
-
-    timerElement.textContent = `${seconds}.${centiseconds.toString().padStart(3, '0')}`;
+    if (cardsBlocked && elapsedTime > expectedUnlock){
+        unlock();
+    }
+    timerElement.textContent = elapsedTime.toFixed(2);
 };
 
 const resultsContainer = document.querySelector(".results");
@@ -228,19 +230,21 @@ const handleCardClick = (event) => {
         } else {
             canClick = false;
             cardsBlocked = true;
-            setTimeout(() => {
-                if (cardsBlocked){
-                    firstCard.classList.remove("opened");
-                    secondCard.classList.remove("opened");
-                    firstCard = null;
-                    secondCard = null;
-                    canClick = true;
-                }
-            }, 600);
+            expectedUnlock = parseFloat(timerElement.textContent) + 0.6;
         }
     }
 };
 
+function unlock(){
+    if (firstCard !== null && secondCard !== null) {
+        firstCard.classList.remove("opened");
+        secondCard.classList.remove("opened");
+        firstCard = null;
+        secondCard = null;
+        expectedUnlock = 0;
+        canClick = true;
+    }
+}
 createCardElements();
 
 // Define a mapping of sound names to file paths
