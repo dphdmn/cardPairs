@@ -13,7 +13,6 @@ body {
 
 .container {
 	text-align: center;
-	margin-top: 20px;
 	user-select: none;
 }
 button {
@@ -65,7 +64,7 @@ button:hover{
 }
 
 .timer {
-	font-size: calc(26px + 0.5vw);
+	font-size: calc(18px + 0.5vw);
     width: 50%;
 	font-weight: normal;
 	display: inline-block;
@@ -209,5 +208,5 @@ input[type="checkbox"]:checked::before {
     box-shadow: 0 0 10px red; /* Add red shadow */
 }
 #cbcontainer{
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
