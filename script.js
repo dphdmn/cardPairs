@@ -1,4 +1,13 @@
 document.body.style.overflow = "hidden";
+// Prevent scrolling on the entire document for touch devices
+document.addEventListener('touchmove', (e) => {
+  e.preventDefault();
+});
+
+// Optionally, you can also prevent scrolling using the mouse wheel
+document.addEventListener('wheel', (e) => {
+  e.preventDefault();
+});
 const cardValues8 = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"];
 const cardValues12 = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F", "G", "H", "I"];
 var cardValues = cardValues8;
