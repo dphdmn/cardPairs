@@ -170,6 +170,8 @@ function resetGame(){
     // Reset variables
     stopTimer();
     timerElement.textContent = "READY";
+    timerElement.style.color = "#fff";
+    timerElement.style.fontWeight = "normal";
     firstCard = null;
     secondCard = null;
     canClick = false;
@@ -262,6 +264,8 @@ const handleCardClick = (event) => {
                 play('win');
                 canClick = false;
                 const elapsedTime = timerElement.textContent;
+                timerElement.style.color = "#39FF14";
+                timerElement.style.fontWeight = "bold";
                 logResult(`${elapsedTime}`);
             }
         } else {
