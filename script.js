@@ -6,7 +6,21 @@ var totalPairs = 8;
 var cardsBlocked = true;
 var expectedUnlock = 0;
 let cards = [];
-
+let crazyMode = false;
+const crazyModeCheckbox = document.getElementById("crazyModeCheckbox");
+const gameContainerforCB = document.querySelector(".game-container");
+crazyModeCheckbox.addEventListener("change", function () {
+    crazyMode = this.checked;
+    if (crazyMode) {
+        gameContainerforCB.classList.add("crazy-mode");
+        logResult("CRAZY_ON");
+    } else {
+        gameContainerforCB.classList.remove("crazy-mode");
+        logResult("CRAZY_OFF");
+    }
+    resetGame();
+    createCardElements();
+});
 const harderButton = document.getElementById("harder-button");
 
 harderButton.addEventListener("click", () => {
@@ -14,7 +28,7 @@ harderButton.addEventListener("click", () => {
         cardValues = cardValues12;
         totalPairs = 12;
         resetGame();
-        logResult("mode12");
+        logResult("HardMode");
         const gameContainer = document.querySelector(".game-container");
         gameContainer.style.gridTemplateColumns = 'repeat(6, 1fr)';
         createCardElements();
@@ -23,7 +37,7 @@ harderButton.addEventListener("click", () => {
         cardValues = cardValues8;
         totalPairs = 8;
         resetGame();
-        logResult("mode8");
+        logResult("EasyMode");
         const gameContainer = document.querySelector(".game-container");
         gameContainer.style.gridTemplateColumns = 'repeat(4, 1fr)';
         createCardElements();
@@ -108,9 +122,8 @@ const updateTimer = () => {
     const currentTime = new Date().getTime();
     const elapsedTime = (currentTime - startTime)/1000; 
 
-    if (cardsBlocked && elapsedTime > expectedUnlock){
+    if (cardsBlocked && elapsedTime > expectedUnlock)
         unlock();
-    }
     timerElement.textContent = elapsedTime.toFixed(2);
 };
 
@@ -165,9 +178,13 @@ function resetGame(){
 
 newGameButton.addEventListener("click", () => {
     if (!(document.querySelectorAll(".card.opened").length === totalPairs * 2)) {
-        if (results.length > 0) {
-            if (results[results.length - 1] !== "reset") {
+        let rl = results.length;
+        if (rl > 0) {
+            if (results[rl - 1] !== "reset" && results[rl - 1] !== "ManyResets") {
                 logResult("reset");
+            }
+            else{
+                results[rl - 1] = "ManyResets";
             }
         }
     }
@@ -179,6 +196,23 @@ newGameButton.addEventListener("click", () => {
 });
 
 const logResult = (result) => {
+    let rl = results.length;
+    if (result === "CRAZY_ON"){
+        if (results[rl - 1] === "CRAZY_OFF"){
+            results[rl - 1] = "CRAZY_ON";
+        }else{
+            results.push(result);
+        }
+        return;
+    }
+    if (result === "CRAZY_OFF"){
+        if (results[rl - 1] === "CRAZY_ON"){
+            results[rl - 1] = "CRAZY_OFF";
+        }else{
+            results.push(result);
+        }
+        return;
+    }
     results.push(result);
     updateResults();
 };
@@ -188,6 +222,9 @@ const updateResults = () => {
 };
 
 const handleCardClick = (event) => {
+    if (crazyMode){
+        unlock();
+    }
     if (!canClick) {
         if (timerElement.textContent === "READY") {
             startTimer();
@@ -228,9 +265,15 @@ const handleCardClick = (event) => {
                 logResult(`${elapsedTime}`);
             }
         } else {
-            canClick = false;
-            cardsBlocked = true;
-            expectedUnlock = parseFloat(timerElement.textContent) + 0.6;
+            if (crazyMode){
+                canClick = true;
+                cardsBlocked = true;
+                expectedUnlock = 9999;
+            }else{
+                canClick = false;
+                cardsBlocked = true;
+                expectedUnlock = parseFloat(timerElement.textContent) + 0.6;
+            }
         }
     }
 };
@@ -270,4 +313,5 @@ function play(soundName) {
         audio.play();
     }
 }
-logResult("mode8");
+logResult("EasyMode");
+logResult("CRAZY_OFF");

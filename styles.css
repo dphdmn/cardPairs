@@ -98,6 +98,10 @@ button:hover{
         min-width: 110px;
     }
 }
+.crazy-mode .card {
+    transition: none; /* Remove transition in CrazyMode */
+    /* Add any additional styles for CrazyMode here */
+}
 
 .card {
     width: 100%;
@@ -156,3 +160,53 @@ button:hover{
 	opacity: 1;
 	transition: opacity 1.5s;
 	/* Added transition for opacity */
+}
+
+/* Style for the label */
+label {
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 5px;
+}
+
+/* Style for the checkbox */
+input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    background-color: #3498db;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #3498db;
+    border-radius: 4px;
+    margin: 0;
+    vertical-align: middle;
+    cursor: pointer;
+    outline: none;
+    position: relative; /* Added for custom checkmark positioning */
+}
+
+/* Style for the custom checkmark */
+input[type="checkbox"]::before {
+    content: "";
+    display: block;
+    width: 20px;
+    height: 20px;
+    background-color: red;
+    position: absolute;
+    border-radius: 4px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0; /* Hide the default browser checkbox */
+    transition: opacity 0.2s ease-in-out;
+}
+
+/* Style for the custom checkmark when checkbox is checked */
+input[type="checkbox"]:checked::before {
+    opacity: 1; /* Show the custom checkmark shape */
+    box-shadow: 0 0 10px red; /* Add red shadow */
+}
+#cbcontainer{
+    margin-bottom: 20px;
+}
